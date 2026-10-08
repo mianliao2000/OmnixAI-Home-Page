@@ -6,6 +6,8 @@ describe('independent platform contract',()=>{
     expect(legacyDestination('/projects/abc','?tab=pcb','#U1')).toBe('https://console.omnixai.biz/projects/abc?tab=pcb#U1');
     expect(legacyDestination('/','?source=legacy','#/eda?board=axis-a')).toBe('https://console.omnixai.biz/eda?board=axis-a');
     expect(legacyDestination('/settings/billing','?projectId=abc&checkout=success','')).toBe('/account/billing?projectId=abc&checkout=success');
+    expect(legacyDestination('/billing/','?projectId=abc','#receipt')).toBe('/account/billing?projectId=abc#receipt');
+    expect(legacyDestination('/','','#/settings/billing/invoices?projectId=abc#receipt')).toBe('/account/billing?projectId=abc#receipt');
     expect(legacyDestination('/','','#requirements')).toBe(null);
   });
   it('rejects external, HTTP, credential and lookalike return targets',()=>{

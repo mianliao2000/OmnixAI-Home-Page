@@ -14,7 +14,7 @@ export function safeReturnTo(value:string|null):string {
 export function legacyDestination(pathname:string,search:string,hash:string):string|null {
   let path=pathname,query=search,fragment=hash;
   if(hash.startsWith('#/')){const legacy=new URL(hash.slice(1),'https://omnixai.biz');path=legacy.pathname;query=legacy.search||search;fragment=legacy.hash;}
-  if(path==='/billing'||path==='/settings/billing')return `/account/billing${query}${fragment}`;
+  if(/^\/(billing|settings\/billing)(\/|$)/.test(path))return `/account/billing${query}${fragment}`;
   if(path==='/home'||path==='/')return null;
   if(/^\/(console|projects|demos|demo|eda|eda-v2|settings)(\/|$)/.test(path))return `https://console.omnixai.biz${path}${query}${fragment}`;
   return null;
