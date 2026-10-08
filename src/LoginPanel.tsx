@@ -20,7 +20,7 @@ export function LoginPanel({ language, providers, returnTo, authError }: {
   const t = (en: string, zh: string) => uiText(language, en, zh);
   return <main className="loginPage">
     <section className="loginCard" aria-labelledby="login-title">
-      <OrbitalBrandLogo iconOnly surface="light"/>
+      <OrbitalBrandLogo iconOnly surface="dark"/>
       <h1 id="login-title">Omnix AI</h1>
       <p className="loginSubtitle">{t('Sign in to continue','使用你的账号登录以继续')}</p>
       <div className="loginProviders">

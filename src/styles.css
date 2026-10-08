@@ -1,17 +1,19 @@
 *{box-sizing:border-box}body{margin:0;font-family:'Encode Sans','Segoe UI',sans-serif}button,input{font:inherit}button,a{touch-action:manipulation}button{cursor:pointer}button:disabled{cursor:default;opacity:.5}a{color:inherit}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #38bdf8;outline-offset:3px}.storyShell{height:100dvh;background:#050506}.storyShell .storyMain{height:100dvh;max-width:none;margin:0;padding:0}.storyTopbar{z-index:30}.homeAccount{display:flex;gap:12px;align-items:center}.homeAccount button,.homeAccount a{background:none;border:0;color:inherit;text-decoration:none;font-size:13px}.storyTopbar .homeAccount{color:#fff}.accountAvatar{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#24618b!important;overflow:hidden}.accountAvatar img{width:100%;height:100%;object-fit:cover}.homeAuthNotice{position:fixed;bottom:12px;right:20px;color:white;background:#172133;padding:10px;z-index:35}.accountHeader{display:flex;justify-content:space-between;align-items:center;padding:18px 28px;border-bottom:1px solid #ddd}.accountHeader .homePrimaryNav{display:flex;gap:18px}.accountHeader button{border:0;background:none}.accountShell{display:grid;grid-template-columns:200px minmax(0,1fr);max-width:1150px;margin:36px auto;gap:32px}.accountNav{display:flex;flex-direction:column;gap:8px}.accountNav a{padding:12px;text-decoration:none;border-radius:8px}.accountNav a[aria-current]{background:#e4f4ff}.accountPage{max-width:850px;padding:20px;margin:auto;line-height:1.6;min-width:0;width:100%}.accountPage>p{overflow-wrap:anywhere}.accountPage form{display:grid;gap:16px;max-width:480px}.accountPage label{display:grid;gap:6px}.accountPage input{padding:10px;border:1px solid #a8b3c2;border-radius:6px}.accountPage button,.accountButton{display:inline-block;border:1px solid #bac8d9;border-radius:6px;background:#f3f8fc;padding:9px 14px;margin:4px;text-decoration:none}.accountRow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid #ddd;overflow-wrap:anywhere}.accountRow small{display:block}.accountError{color:#a32929}.homeApp{min-height:100dvh;background:#fafbfd;color:#1e293b}.srOnly{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
 @media(max-width:900px){.storyShell{--landing-header-height:calc(116px + env(safe-area-inset-top,0px))}.storyShell .storyTopbar{grid-template-columns:minmax(0,1fr);gap:4px}.homeAccount{justify-content:flex-end;min-height:24px}.accountHeader{flex-wrap:wrap;gap:12px;padding:14px}.accountHeader .homePrimaryNav{gap:10px}.accountShell{display:block;margin:12px}.accountNav{flex-direction:row;flex-wrap:wrap;gap:0}.accountRow{flex-wrap:wrap}}
-.loginPage{min-height:100dvh;display:grid;place-items:center;padding:40px 20px;background-color:#fafbfd;background-image:linear-gradient(#e8edf380 1px,transparent 1px),linear-gradient(90deg,#e8edf380 1px,transparent 1px);background-size:60px 60px;color:#202633}
+.loginPage{min-height:100dvh;display:grid;place-items:center;padding:40px 20px;background:#030b17;background-image:radial-gradient(ellipse at 20% 15%,#082147 0%,transparent 65%),radial-gradient(ellipse at 90% 85%,#052132 0%,transparent 55%);color:rgba(255,255,255,.9);color-scheme:dark}
 .accountHeader+.loginPage{min-height:calc(100dvh - 73px)}
-.loginCard{width:min(100%,384px);padding:32px;text-align:center;border:1px solid #e0e5ed;border-radius:16px;background:#fafbfd;box-shadow:0 0 65px #38c9c00c}
+.loginCard{width:min(100%,384px);padding:32px;text-align:center;border:1px solid #253950;border-radius:16px;background:#091728;box-shadow:0 20px 70px #0005}
 .loginCard .orbitalBrandIcon{width:44px;height:44px;margin:0 auto 18px}
-.loginCard h1{margin:0;font-size:22px;font-weight:700;letter-spacing:.025em;color:#102c4c}
-.loginSubtitle{margin:10px 0 30px;font-size:14px;color:#52657c}
+.loginCard h1{margin:0;font-size:22px;font-weight:700;letter-spacing:.025em;color:rgba(255,255,255,.9)}
+.loginSubtitle{margin:10px 0 30px;font-size:14px;color:#b2c0d2}
 .loginProviders{display:grid;gap:12px}
-.loginProvider{width:100%;min-height:40px;display:flex;align-items:center;justify-content:center;gap:12px;border:1px solid #d1d7e0;border-radius:10px;background:#fafbfd;color:#102c4c;text-decoration:none;font-size:14px;font-weight:700;letter-spacing:.025em;transition:background .15s,border-color .15s}
-.loginProvider:hover{background:#f0f3fa;border-color:#a9b8d1}
+.loginProvider{width:100%;min-height:40px;display:flex;align-items:center;justify-content:center;gap:12px;border:1px solid #344963;border-radius:10px;background:#102139;color:rgba(255,255,255,.9);text-decoration:none;font-size:14px;font-weight:700;letter-spacing:.025em;transition:background .15s,border-color .15s}
+.loginProvider:hover{background:#18324e;border-color:#6688a9}
 .loginProvider svg{width:18px;height:18px;flex-shrink:0}
-.loginProvider:disabled{opacity:.5;background:#fafbfd}
-.loginNotice{margin:14px 0 0;color:#52657c;font-size:12px;line-height:1.6;overflow-wrap:anywhere}
-.loginBack{display:inline-block;margin-top:24px;color:#24618b;font-size:12px;font-weight:600;text-decoration:none}
+.loginProvider:disabled{opacity:.5;background:#102139}
+.loginNotice{margin:14px 0 0;color:#b2c0d2;font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+.loginBack{display:inline-block;margin-top:24px;color:#b7cfdf;font-size:12px;font-weight:600;text-decoration:none}
 .loginBack:hover{text-decoration:underline}
+.storyTopbar .homeSignIn{font-size:14px}
+@media(max-width:900px){.storyTopbar .homeSignIn{font-size:13px}}
 @media(max-width:420px){.loginCard{padding:30px 24px}.loginPage{padding:24px 20px}}

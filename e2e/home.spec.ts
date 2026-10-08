@@ -12,7 +12,10 @@ test('homepage preserves hero, mobile image top and module password navigation',
   await expect(page.getByRole('button',{name:'Change language'})).toHaveCount(0);
   const navTypography=await page.getByRole('button',{name:'Console',exact:true}).evaluate(el=>{const s=getComputedStyle(el);return [s.fontFamily,s.fontSize,s.fontWeight,s.color,s.letterSpacing];});
   const loginTypography=await page.getByRole('link',{name:'Sign in',exact:true}).evaluate(el=>{const s=getComputedStyle(el);return [s.fontFamily,s.fontSize,s.fontWeight,s.color,s.letterSpacing];});
-  expect(loginTypography).toEqual(navTypography);
+  expect(loginTypography.filter((_,i)=>i!==1&&i!==4)).toEqual(navTypography.filter((_,i)=>i!==1&&i!==4));
+  const relativeSpacing=(style:string[])=>style[4]==='normal'?0:parseFloat(style[4])/parseFloat(style[1]);
+  expect(relativeSpacing(loginTypography)).toBeCloseTo(relativeSpacing(navTypography),3);
+  expect(parseFloat(loginTypography[1])).toBeLessThan(parseFloat(navTypography[1]));
   const geometry=await page.locator('.landingHeroMedia').evaluate(el=>({position:getComputedStyle(el).backgroundPosition,origin:getComputedStyle(el).transformOrigin,scrollWidth:document.documentElement.scrollWidth,width:innerWidth,top:el.getBoundingClientRect().top}));
   expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.width);
   if(info.project.name==='mobile'){
