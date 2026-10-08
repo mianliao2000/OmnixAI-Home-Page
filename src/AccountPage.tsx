@@ -1,13 +1,14 @@
 import React from 'react';
+import { LoginPanel } from './LoginPanel';
 import { request,prepareBilling,type AccountUser,type AccountSession,type Identity,type Blocker } from './api';
 import { destinations,loginUrl,safeReturnTo } from './platform';
 import { uiText,type UiLanguage } from './i18n';
 
-type Props={user:AccountUser|null;language:UiLanguage;providers:Record<string,boolean>;refresh:()=>Promise<void>;authError:string};
+type Props={user:AccountUser|null;language:UiLanguage;providers:Record<string,boolean>;refresh:()=>Promise<void>;authError:string;onGuest:()=>void};
 type Billing={account:{ownerName:string;ownerType:string};membership:{planId:string;status:string;canManageBilling:boolean};wallet:{balance:number;available:number;reserved:number};stripe:{configured:boolean;hasCustomer:boolean};creditPacks:{id:string;priceUsd:number;credits:number}[];plans:{id:string;monthlyUsd:number;annualUsd:number;scope:string}[]};
 type Invoice={id:string;number?:string;status:string;total:number;currency:string;hostedInvoiceUrl?:string;invoicePdf?:string};
 
-export function AccountPage({user,language,providers,refresh,authError}:Props){
+export function AccountPage({user,language,providers,refresh,authError,onGuest}:Props){
   const section=window.location.pathname.split('/')[2]||'profile';
   const t=(en:string,zh:string)=>uiText(language,en,zh);
   const [name,setName]=React.useState(user?.name||'');
@@ -38,7 +39,7 @@ export function AccountPage({user,language,providers,refresh,authError}:Props){
     }
   },[user?.accountId,section,query]);
   React.useEffect(()=>{setName(user?.name||'');void load().catch(e=>setError(e.message));},[load,user?.name]);
-  if(!user)return <main className="accountPage"><h1>{t('Your Omnix account','你的 Omnix 账号')}</h1><p>{authError||t('Sign in to manage your profile, devices and billing.','登录后管理资料、设备和账单。')}</p>{Object.entries(providers).filter(([,on])=>on).map(([provider])=><a className="accountButton" key={provider} href={loginUrl(provider,loginReturn)}>{t('Sign in with','登录方式：')} {provider}</a>)}{!Object.values(providers).some(Boolean)&&<p>{t('Login providers are unavailable. Please try again later.','登录服务暂不可用，请稍后重试。')}</p>}</main>;
+  if(!user)return <LoginPanel language={language} providers={providers} returnTo={loginReturn} authError={authError} onGuest={onGuest}/>;
   const recent=Date.now()/1000-user.authenticatedAt<600;
   return <div className="accountShell"><nav className="accountNav" aria-label="Account settings">
     {['profile','security','billing','privacy'].map(item=><a key={item} aria-current={section===item?'page':undefined} href={'/account/'+item}>{t(item[0].toUpperCase()+item.slice(1),({profile:'个人资料',security:'登录与设备',billing:'账单',privacy:'数据与账号'} as Record<string,string>)[item])}</a>)}

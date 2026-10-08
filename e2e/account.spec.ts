@@ -26,7 +26,7 @@ test('last login cannot be removed and all-device logout uses authority',async({
     await route.fulfill({json:{user:signedIn?identity:null,csrfToken:'device-csrf'}});
   });
   await page.goto('/account/security');await expect(page.getByRole('button',{name:'Unlink'})).toBeDisabled();
-  await page.getByRole('button',{name:'Sign out of every device'}).click();await expect(page.getByRole('link',{name:'Sign in with google'})).toBeVisible();
+  await page.getByRole('button',{name:'Sign out of every device'}).click();await expect(page.getByRole('link',{name:'Sign in with Google',exact:true})).toBeVisible();
 });
 test('deletion blockers and backend failure never become deletion success',async({page})=>{
   let blocked=true;
