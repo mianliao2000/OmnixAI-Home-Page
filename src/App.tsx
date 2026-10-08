@@ -23,6 +23,7 @@ export default function App(){
   },[refresh]);
   const account=location.pathname.startsWith('/account/')||location.pathname==='/login';
   React.useEffect(()=>{if(user&&location.pathname==='/login'&&!authError)location.replace(safeReturnTo(new URLSearchParams(location.search).get('return_to')));},[user,authError]);
+  React.useEffect(()=>{if(user?.status==='deleting'&&location.pathname!=='/account/privacy')location.replace('/account/privacy');},[user]);
   const openModule=async(module:'console'|'library'|'verification'|'layout')=>{
     if(hasSharedDemoAccess(document.cookie)){
       if(module==='library'||module==='layout'){
