@@ -11,12 +11,11 @@ function ProviderIcon({ provider }: { provider: 'google' | 'github' }) {
   </svg> : <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .9a11.1 11.1 0 0 0-3.5 21.63c.55.1.76-.24.76-.54v-2.07c-3.1.67-3.76-1.32-3.76-1.32-.5-1.28-1.24-1.62-1.24-1.62-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.16 1.72 1.16 1 1.71 2.61 1.22 3.25.93.1-.72.4-1.22.71-1.5-2.48-.28-5.08-1.24-5.08-5.51 0-1.22.44-2.22 1.15-3-.11-.28-.5-1.42.11-2.96 0 0 .94-.3 3.05 1.14a10.6 10.6 0 0 1 5.55 0c2.12-1.43 3.05-1.14 3.05-1.14.61 1.54.23 2.68.11 2.96.72.78 1.15 1.78 1.15 3.01 0 4.28-2.6 5.22-5.09 5.5.4.35.76 1.02.76 2.06v3.05c0 .3.2.65.76.54A11.1 11.1 0 0 0 12 .9Z"/></svg>;
 }
 
-export function LoginPanel({ language, providers, returnTo, authError, onGuest }: {
+export function LoginPanel({ language, providers, returnTo, authError }: {
   language: UiLanguage;
   providers: Record<string, boolean>;
   returnTo: string;
   authError: string;
-  onGuest: () => void;
 }) {
   const t = (en: string, zh: string) => uiText(language, en, zh);
   return <main className="loginPage">
@@ -35,10 +34,6 @@ export function LoginPanel({ language, providers, returnTo, authError, onGuest }
       </div>
       {authError && <p className="loginNotice" role="status">{authError}</p>}
       {!authError && !Object.values(providers).some(Boolean) && <p className="loginNotice" role="status">{t('Login providers are unavailable. Please try again later.','登录服务暂不可用，请稍后重试。')}</p>}
-      <button className="loginGuest" onClick={onGuest}>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><circle cx="12" cy="7.5" r="3.2"/><path d="M5.5 20v-2a6.5 6.5 0 0 1 13 0v2"/></svg>
-        {t('Try as a guest','游客试用')}
-      </button>
       <a className="loginBack" href="/">{t('Back to home','返回首页')}</a>
     </section>
   </main>;

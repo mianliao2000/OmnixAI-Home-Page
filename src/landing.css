@@ -362,7 +362,8 @@ body:has(.storyShell) {
 }
 
 .homePrimaryNav button,
-.homePrimaryNav a {
+.homePrimaryNav a,
+.storyTopbar .homeSignIn {
   position: relative;
   min-width: 0;
   padding: 10px 0;
@@ -383,7 +384,8 @@ body:has(.storyShell) {
 }
 
 .homePrimaryNav button::after,
-.homePrimaryNav a::after {
+.homePrimaryNav a::after,
+.storyTopbar .homeSignIn::after {
   content: "";
   position: absolute;
   right: 0;
@@ -399,7 +401,9 @@ body:has(.storyShell) {
 .homePrimaryNav button:hover:not(:disabled),
 .homePrimaryNav button:focus-visible,
 .homePrimaryNav a:hover,
-.homePrimaryNav a:focus-visible {
+.homePrimaryNav a:focus-visible,
+.storyTopbar .homeSignIn:hover,
+.storyTopbar .homeSignIn:focus-visible {
   border: 0;
   background: transparent;
   color: #ffffff;
@@ -410,13 +414,16 @@ body:has(.storyShell) {
 .homePrimaryNav button:hover::after,
 .homePrimaryNav button:focus-visible::after,
 .homePrimaryNav a:hover::after,
-.homePrimaryNav a:focus-visible::after {
+.homePrimaryNav a:focus-visible::after,
+.storyTopbar .homeSignIn:hover::after,
+.storyTopbar .homeSignIn:focus-visible::after {
   transform: scaleX(1);
   transform-origin: left center;
 }
 
 .homePrimaryNav button:focus-visible,
-.homePrimaryNav a:focus-visible {
+.homePrimaryNav a:focus-visible,
+.storyTopbar .homeSignIn:focus-visible {
   outline: 1px solid rgba(125, 220, 255, 0.9);
   outline-offset: 5px;
 }
@@ -434,7 +441,8 @@ body:has(.storyShell) {
   }
 
   .homePrimaryNav button,
-.homePrimaryNav a {
+  .homePrimaryNav a,
+  .storyTopbar .homeSignIn {
     font-size: 18px;
   }
 
@@ -1533,7 +1541,8 @@ body:has(.storyShell) {
     padding: 0;
   }
 
-  .storyTopbar .homePrimaryNav button {
+  .storyTopbar .homePrimaryNav button,
+  .storyTopbar .homeSignIn {
     min-height: 44px;
     font-size: 15px;
     letter-spacing: 0;

@@ -4,11 +4,11 @@ import { request,prepareBilling,type AccountUser,type AccountSession,type Identi
 import { destinations,loginUrl,safeReturnTo } from './platform';
 import { uiText,type UiLanguage } from './i18n';
 
-type Props={user:AccountUser|null;language:UiLanguage;providers:Record<string,boolean>;refresh:()=>Promise<void>;authError:string;onGuest:()=>void};
+type Props={user:AccountUser|null;language:UiLanguage;providers:Record<string,boolean>;refresh:()=>Promise<void>;authError:string};
 type Billing={account:{ownerName:string;ownerType:string};membership:{planId:string;status:string;canManageBilling:boolean};wallet:{balance:number;available:number;reserved:number};stripe:{configured:boolean;hasCustomer:boolean};creditPacks:{id:string;priceUsd:number;credits:number}[];plans:{id:string;monthlyUsd:number;annualUsd:number;scope:string}[]};
 type Invoice={id:string;number?:string;status:string;total:number;currency:string;hostedInvoiceUrl?:string;invoicePdf?:string};
 
-export function AccountPage({user,language,providers,refresh,authError,onGuest}:Props){
+export function AccountPage({user,language,providers,refresh,authError}:Props){
   const section=window.location.pathname.split('/')[2]||'profile';
   const t=(en:string,zh:string)=>uiText(language,en,zh);
   const [name,setName]=React.useState(user?.name||'');
@@ -39,7 +39,7 @@ export function AccountPage({user,language,providers,refresh,authError,onGuest}:
     }
   },[user?.accountId,section,query]);
   React.useEffect(()=>{setName(user?.name||'');void load().catch(e=>setError(e.message));},[load,user?.name]);
-  if(!user)return <LoginPanel language={language} providers={providers} returnTo={loginReturn} authError={authError} onGuest={onGuest}/>;
+  if(!user)return <LoginPanel language={language} providers={providers} returnTo={loginReturn} authError={authError}/>;
   const recent=Date.now()/1000-user.authenticatedAt<600;
   return <div className="accountShell"><nav className="accountNav" aria-label="Account settings">
     {['profile','security','billing','privacy'].map(item=><a key={item} aria-current={section===item?'page':undefined} href={'/account/'+item}>{t(item[0].toUpperCase()+item.slice(1),({profile:'个人资料',security:'登录与设备',billing:'账单',privacy:'数据与账号'} as Record<string,string>)[item])}</a>)}
