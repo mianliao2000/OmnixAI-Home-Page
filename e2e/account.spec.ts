@@ -54,3 +54,22 @@ test('billing outage does not display a fixture or demo balance',async({page})=>
   await expect(page.getByRole('alert')).toHaveText('billing_unavailable');await expect(page.getByText('Billing has not loaded.')).toBeVisible();
   await expect(page.getByRole('button',{name:'Manage subscription and payment methods'})).toHaveCount(0);
 });
+
+test('unconfigured Stripe keeps purchases and portal disabled',async({page})=>{
+  await page.route('**/api/**',async route=>{
+    const path=new URL(route.request().url()).pathname;
+    if(path==='/api/auth/providers')return route.fulfill({json:{providers:{google:true}}});
+    if(path==='/api/v1/billing/summary')return route.fulfill({json:{
+      account:{ownerName:identity.name,ownerType:'user'},membership:{planId:'free',status:'active',canManageBilling:true},
+      wallet:{available:0,balance:0,reserved:0},stripe:{configured:false,hasCustomer:false},
+      creditPacks:[{id:'small',credits:100,priceUsd:1}],plans:[{id:'pro',scope:'user',monthlyUsd:10,annualUsd:100}]
+    }});
+    if(path==='/api/v1/billing/invoices')return route.fulfill({json:{invoices:[]}});
+    if(path==='/api/v1/billing/ledger')return route.fulfill({json:{entries:[]}});
+    if(path==='/api/v1/billing/checkout'||path==='/api/v1/billing/portal')throw new Error('Unconfigured payments must never be submitted');
+    return route.fulfill({json:{user:identity,csrfToken:'device-csrf'}});
+  });
+  await page.goto('/account/billing');
+  await expect(page.getByText('Payments are not configured. No purchase can be made.')).toBeVisible();
+  for(const button of await page.locator('.accountPage button').all())await expect(button).toBeDisabled();
+});
