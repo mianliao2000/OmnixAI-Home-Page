@@ -1,0 +1,17 @@
+{
+  "src/platform.ts": [
+    "https://omnixai.biz",
+    "https://console.omnixai.biz",
+    "https://library.omnixai.biz",
+    "https://verification.omnixai.biz",
+    "https://pcb.omnixai.biz"
+  ],
+  "src/api.ts": [
+    "/api/auth/session",
+    "/api/v1/auth/sso/exchange"
+  ],
+  "src/AccountPage.tsx": [
+    "/api/account/v1/",
+    "/api/v1/billing/"
+  ]
+}

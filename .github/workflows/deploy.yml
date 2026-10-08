@@ -1,0 +1,65 @@
+name: Home Page CI and release
+on:
+  push: {branches: [main]}
+  pull_request: {branches: [main]}
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 24, cache: npm}
+      - run: python3 tools/check_platform_contract.py
+      - run: npm ci
+      - run: npm run check:contract && npm test && npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test
+  deploy:
+    needs: ci
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    concurrency: {group: home-page-production, cancel-in-progress: false}
+    permissions: {contents: read, id-token: write}
+    env:
+      PROJECT: project-783f678d-77b6-459e-847
+      REGION: us-west1
+      SERVICE: omnixai-home-page
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - run: gcloud auth configure-docker us-west1-docker.pkg.dev --quiet
+      - name: Build immutable image
+        run: |
+          image="$REGION-docker.pkg.dev/$PROJECT/home-page/web:$GITHUB_SHA"
+          docker build --build-arg VCS_REF="$GITHUB_SHA" --label org.opencontainers.image.revision="$GITHUB_SHA" -t "$image" .
+          docker push "$image"
+          digest=$(docker inspect --format='{{index .RepoDigests 0}}' "$image")
+          echo "HOME_IMAGE=$digest" >> "$GITHUB_ENV"
+      - name: Publish candidate and verify
+        run: |
+          gcloud run deploy "$SERVICE" --project "$PROJECT" --region "$REGION" --image "$HOME_IMAGE" --no-traffic --tag candidate --quiet
+          candidate=$(gcloud run services describe "$SERVICE" --project "$PROJECT" --region "$REGION" --format=json | python3 -c 'import json,sys; print(next(t["url"] for t in json.load(sys.stdin)["status"]["traffic"] if t.get("tag")=="candidate"))')
+          curl --fail --retry 8 --retry-delay 3 "$candidate/health/ready" | python3 -c 'import json,os,sys; d=json.load(sys.stdin); assert d["service"]=="home-page" and d["revision"]==os.environ["GITHUB_SHA"]'
+          curl --fail "$candidate/" | grep -q 'Omnix AI'
+          revision=$(gcloud run services describe "$SERVICE" --project "$PROJECT" --region "$REGION" --format='value(status.latestReadyRevisionName)')
+          echo "HOME_REVISION=$revision" >> "$GITHUB_ENV"
+      - name: Promote current main and rollback on failure
+        env: {GH_TOKEN: '${{ github.token }}', PUBLIC_SMOKE: '${{ vars.HOME_PUBLIC_SMOKE_ENABLED }}'}
+        run: |
+          latest=$(gh api repos/${{ github.repository }}/git/ref/heads/main --jq .object.sha)
+          [ "$latest" = "$GITHUB_SHA" ] || exit 0
+          previous=$(gcloud run services describe "$SERVICE" --project "$PROJECT" --region "$REGION" --format=json | python3 -c 'import json,sys; s=json.load(sys.stdin); print(next((t["revisionName"] for t in s["status"].get("traffic",[]) if t.get("percent",0)>0),""))')
+          gcloud run services update-traffic "$SERVICE" --project "$PROJECT" --region "$REGION" --to-revisions "$HOME_REVISION=100" --quiet
+          url=$(gcloud run services describe "$SERVICE" --project "$PROJECT" --region "$REGION" --format='value(status.url)')
+          smoke_url="$url/health/ready"
+          if [ "$PUBLIC_SMOKE" = "true" ]; then smoke_url="https://omnixai.biz/health/home-ready"; fi
+          if ! curl --fail --retry 8 --retry-delay 3 "$smoke_url" | python3 -c 'import json,os,sys; d=json.load(sys.stdin); assert d["service"]=="home-page" and d["revision"]==os.environ["GITHUB_SHA"]'; then
+            if [ -n "$previous" ]; then gcloud run services update-traffic "$SERVICE" --project "$PROJECT" --region "$REGION" --to-revisions "$previous=100" --quiet; fi
+            exit 1
+          fi

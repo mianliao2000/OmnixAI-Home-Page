@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "origins": {
+    "home": "https://omnixai.biz",
+    "console": "https://console.omnixai.biz",
+    "library": "https://library.omnixai.biz",
+    "verification": "https://verification.omnixai.biz",
+    "layout": "https://pcb.omnixai.biz"
+  },
+  "accountApi": "/api/account/v1",
+  "authSession": "/api/auth/session",
+  "oauthAuthority": "https://library.omnixai.biz",
+  "consoleAuth": "/api/v1/auth",
+  "billingApi": "/api/v1/billing",
+  "accountPaths": [
+    "/account/profile",
+    "/account/security",
+    "/account/billing",
+    "/account/privacy"
+  ],
+  "legacyConsolePrefixes": [
+    "console",
+    "projects",
+    "demos",
+    "demo",
+    "eda",
+    "eda-v2",
+    "settings"
+  ],
+  "demoAccessCookie": "omnix_demo_access",
+  "sharedAccountCookie": "__Secure-omnix_account"
+}
